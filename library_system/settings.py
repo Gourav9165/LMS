@@ -135,3 +135,9 @@ DEFAULT_FROM_EMAIL = 'admin@librarysystem.local'
 LOGIN_REDIRECT_URL = 'book_list'
 
 LOGOUT_REDIRECT_URL = 'book_list'
+
+# Trust Vercel's HTTPS proxy to allow login sessions
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['https://lms-fuus.vercel.app'] # Add your exact Vercel URL

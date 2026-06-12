@@ -1,0 +1,65 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-10 pt-4">
+    
+    <div class="m3-tertiary-container rounded-[48px] p-8 md:p-14 m3-entrance flex flex-col lg:flex-row justify-between items-center gap-8 shadow-sm" style="animation-delay: 0s;">
+        <div class="text-center lg:text-left flex-1">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4 text-[#001D35] leading-tight">
+                Library Catalog
+            </h1>
+            <p class="font-medium text-lg text-[#001D35]/80 max-w-xl mx-auto lg:mx-0">
+                Discover your next great read. Search by title, author, or scan an ISBN barcode.
+            </p>
+        </div>
+        
+        <form method="GET" action="{% url 'book_list' %}" class="w-full lg:w-auto flex flex-col sm:flex-row gap-3">
+            <input type="text" name="q" value="{{ query }}" autofocus placeholder="Search catalog..." 
+                   class="w-full sm:w-80 px-8 py-5 rounded-full text-lg font-bold text-[#1A1B20] bg-white focus:outline-none focus:ring-4 focus:ring-[#415F91]/20 shadow-sm transition-all border-none placeholder-gray-400">
+            <button type="submit" class="m3-primary m3-interactive font-bold px-10 py-5 rounded-full text-lg shadow-sm whitespace-nowrap">
+                Search
+            </button>
+        </form>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for book in books %}
+        <div class="bg-white rounded-[32px] p-8 flex flex-col justify-between shadow-sm border border-[#1A1B20]/5 m3-interactive m3-entrance" style="animation-delay: calc(0.05s * {{ forloop.counter }});">
+            
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-[#1A1B20] leading-tight mb-2 line-clamp-2 tracking-tight">{{ book.title }}</h2>
+                <p class="text-lg font-medium text-[#1A1B20]/60">{{ book.author }}</p>
+            </div>
+            
+            <div class="flex justify-between items-center pt-6 border-t border-[#1A1B20]/5">
+                {% if book.available_copies > 0 %}
+                    <span class="px-4 py-2 m3-primary-container rounded-full text-xs font-bold uppercase tracking-widest text-[#001B3E]">
+                        {{ book.available_copies }} left
+                    </span>
+                    <a href="{% url 'issue_book' book.id %}" class="m3-primary m3-interactive text-sm font-bold px-6 py-3 rounded-full flex items-center gap-2">
+                        Borrow
+                    </a>
+                {% else %}
+                    <span class="px-4 py-2 m3-error-container rounded-full text-xs font-bold uppercase tracking-widest text-[#410002]">
+                        Out
+                    </span>
+                    <a href="{% url 'reserve_book' book.id %}" class="bg-[#1A1B20]/5 text-[#1A1B20] hover:bg-[#1A1B20]/10 m3-interactive text-sm font-bold px-6 py-3 rounded-full flex items-center gap-2 transition-colors">
+                        Reserve
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full m3-surface-container rounded-[40px] p-16 md:p-24 text-center m3-entrance" style="animation-delay: 0.1s;">
+            <div class="w-24 h-24 rounded-full m3-primary-container flex items-center justify-center mx-auto mb-6 text-4xl shadow-sm">
+                📚
+            </div>
+            <h3 class="text-3xl font-extrabold text-[#1A1B20] tracking-tight mb-3">No books found</h3>
+            <p class="text-lg font-medium text-[#1A1B20]/70 max-w-md mx-auto">
+                Try adjusting your search terms, looking for a different author, or checking back later.
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

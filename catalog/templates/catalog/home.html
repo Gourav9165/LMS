@@ -1,0 +1,56 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6">
+    
+    <div class="m3-primary-container rounded-[48px] p-8 md:p-16 lg:p-24 text-center m3-entrance shadow-sm" style="animation-delay: 0s;">
+        <h1 class="text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-[0.95] text-[#001B3E]">
+            Knowledge,<br>reimagined.
+        </h1>
+        <p class="text-xl md:text-2xl font-medium max-w-2xl mx-auto mb-10 opacity-90 text-[#001B3E]">
+            Browse our extensive collection, reserve high-demand books, and manage your borrowing history with absolute clarity.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="{% url 'book_list' %}" class="m3-primary m3-interactive text-lg font-bold px-10 py-5 rounded-full flex items-center justify-center gap-2 shadow-lg border border-white/20">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                Browse Catalog
+            </a>
+            {% if not request.user.is_authenticated %}
+            <a href="{% url 'register' %}" class="bg-white/20 backdrop-blur-md border border-[#001B3E]/20 text-[#001B3E] hover:bg-white/40 text-lg font-bold px-10 py-5 rounded-full transition-colors flex items-center justify-center shadow-sm">
+                Become a Member
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="m3-tertiary-container m3-interactive rounded-[32px] p-10 m3-entrance flex flex-col justify-between shadow-sm" style="animation-delay: 0.1s;">
+            <div class="w-16 h-16 rounded-full bg-[#001D35] text-[#C2E7FF] flex items-center justify-center text-2xl font-bold mb-12 shadow-md">1</div>
+            <div>
+                <h3 class="text-3xl font-bold tracking-tight mb-3">Find a Book</h3>
+                <p class="font-medium text-lg opacity-80 leading-snug">Search our digital catalog by title, author, or instantly locate items using an ISBN scanner.</p>
+            </div>
+        </div>
+        
+        <div class="m3-secondary-container m3-interactive rounded-[32px] p-10 m3-entrance flex flex-col justify-between shadow-sm" style="animation-delay: 0.15s;">
+            <div class="w-16 h-16 rounded-full bg-[#22005D] text-[#E9DDFF] flex items-center justify-center text-2xl font-bold mb-12 shadow-md">2</div>
+            <div>
+                <h3 class="text-3xl font-bold tracking-tight mb-3">Borrow or Reserve</h3>
+                <p class="font-medium text-lg opacity-80 leading-snug">Check out books immediately. If an item is out of stock, join the waitlist with a single tap.</p>
+            </div>
+        </div>
+        
+        <div class="m3-error-container m3-interactive rounded-[32px] p-10 m3-entrance flex flex-col justify-between shadow-sm" style="animation-delay: 0.2s;">
+            <div class="w-16 h-16 rounded-full bg-[#410002] text-[#FFDAD6] flex items-center justify-center text-2xl font-bold mb-12 shadow-md">3</div>
+            <div>
+                <h3 class="text-3xl font-bold tracking-tight mb-3">Read & Return</h3>
+                <p class="font-medium text-lg opacity-80 leading-snug">Enjoy your book. Download PDF receipts directly from your profile and track due dates.</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock content %}

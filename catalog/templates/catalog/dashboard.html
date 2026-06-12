@@ -1,0 +1,284 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-10 pt-4">
+
+    <div class="m3-secondary-container rounded-[48px] p-10 md:p-14 m3-entrance flex flex-col md:flex-row justify-between items-center gap-8 shadow-sm" style="animation-delay: 0s;">
+        <div>
+            <div class="w-16 h-16 rounded-[24px] bg-[#22005D] text-[#E9DDFF] flex items-center justify-center text-3xl mb-6 shadow-sm">
+                📊
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter mb-3 text-[#22005D] leading-tight">
+                Librarian Dashboard
+            </h1>
+            <p class="font-medium text-lg text-[#22005D]/80">System overview and recent activity.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <a href="/admin/catalog/book/add/" class="m3-primary m3-interactive px-8 py-4 rounded-full text-base font-bold shadow-sm flex items-center justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                Add New Book
+            </a>
+            <a href="/admin/users/user/" class="bg-white/50 text-[#22005D] hover:bg-white m3-interactive px-8 py-4 rounded-full text-base font-bold transition-colors flex items-center justify-center gap-2">
+                Manage Members
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <div class="m3-primary-container m3-interactive rounded-[32px] p-8 m3-entrance flex flex-col justify-between shadow-sm" style="animation-delay: 0.1s;">
+            <div class="flex justify-between items-start mb-8">
+                <div class="w-12 h-12 rounded-full bg-[#001B3E] text-[#D6E3FF] flex items-center justify-center text-xl shadow-sm">📚</div>
+            </div>
+            <div>
+                <p class="text-sm uppercase tracking-widest font-bold opacity-80 mb-1 text-[#001B3E]">Total Books</p>
+                <h3 class="text-5xl font-extrabold tracking-tighter text-[#001B3E]">{{ total_books|default:"0" }}</h3>
+            </div>
+        </div>
+
+        <div class="m3-tertiary-container m3-interactive rounded-[32px] p-8 m3-entrance flex flex-col justify-between shadow-sm" style="animation-delay: 0.15s;">
+            <div class="flex justify-between items-start mb-8">
+                <div class="w-12 h-12 rounded-full bg-[#001D35] text-[#C2E7FF] flex items-center justify-center text-xl shadow-sm">👥</div>
+            </div>
+            <div>
+                <p class="text-sm uppercase tracking-widest font-bold opacity-80 mb-1 text-[#001D35]">Active Members</p>
+                <h3 class="text-5xl font-extrabold tracking-tighter text-[#001D35]">{{ total_members|default:"0" }}</h3>
+            </div>
+        </div>
+
+        <div class="bg-white m3-interactive rounded-[32px] p-8 m3-entrance flex flex-col justify-between shadow-sm border border-[#1A1B20]/5" style="animation-delay: 0.2s;">
+            <div class="flex justify-between items-start mb-8">
+                <div class="w-12 h-12 rounded-full bg-[#415F91]/10 text-[#415F91] flex items-center justify-center text-xl">📖</div>
+            </div>
+            <div>
+                <p class="text-sm uppercase tracking-widest font-bold opacity-60 mb-1 text-[#1A1B20]">Books Out</p>
+                <h3 class="text-5xl font-extrabold tracking-tighter text-[#415F91]">{{ active_borrows|default:"0" }}</h3>
+            </div>
+        </div>
+
+        <div class="m3-error-container m3-interactive rounded-[32px] p-8 m3-entrance flex flex-col justify-between shadow-sm" style="animation-delay: 0.25s;">
+            <div class="flex justify-between items-start mb-8">
+                <div class="w-12 h-12 rounded-full bg-[#410002] text-[#FFDAD6] flex items-center justify-center text-xl shadow-sm">⚠️</div>
+            </div>
+            <div>
+                <p class="text-sm uppercase tracking-widest font-bold opacity-80 mb-1 text-[#410002]">Overdue Items</p>
+                <h3 class="text-5xl font-extrabold tracking-tighter text-[#410002]">{{ overdue_count|default:"0" }}</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="m3-entrance" style="animation-delay: 0.25s;">
+        
+        <div class="flex flex-col sm:flex-row justify-between items-center px-6 mb-6 gap-4">
+            <h2 class="text-3xl font-extrabold tracking-tight">Borrowing Trends</h2>
+            
+            <div class="relative w-full sm:w-auto">
+                <select id="chartTypeSelector" class="appearance-none w-full bg-[#F0F0F4] text-[#1A1B20] font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full cursor-pointer hover:bg-[#E3E3E8] transition-colors pr-12 focus:outline-none focus:ring-4 focus:ring-[#415F91]/20 border-none shadow-sm m3-interactive">
+                    <option value="line">Line Chart</option>
+                    <option value="bar">Bar Chart</option>
+                    <option value="doughnut">Doughnut Chart</option>
+                    <option value="pie">Pie Chart</option>
+                    <option value="polarArea">Polar Area</option>
+                    <option value="radar">Radar Chart</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-[#1A1B20]/60">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-[40px] p-8 md:p-10 shadow-sm border border-[#1A1B20]/5 relative">
+            <div class="relative h-[350px] w-full">
+                <canvas id="borrowingChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="m3-entrance" style="animation-delay: 0.3s;">
+        <div class="flex items-center justify-between px-6 mb-6">
+            <h2 class="text-3xl font-extrabold tracking-tight">Recent Activity</h2>
+            <a href="/admin/transactions/borrowrecord/" class="text-[#415F91] font-bold hover:underline underline-offset-4">View All</a>
+        </div>
+        
+        <div class="m3-surface-container rounded-[40px] overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left border-collapse">
+                    <thead class="border-b border-[#1A1B20]/10 bg-white/40">
+                        <tr>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70">User</th>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70">Book</th>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70">Date Issued</th>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#1A1B20]/5">
+                        {% for transaction in recent_transactions %}
+                        <tr class="transition-colors hover:bg-white/50">
+                            <td class="px-10 py-6">
+                                <div class="font-bold text-lg text-[#1A1B20]">{{ transaction.user.username }}</div>
+                                <div class="text-sm font-medium opacity-60">{{ transaction.user.library_card_number }}</div>
+                            </td>
+                            <td class="px-10 py-6 font-bold text-lg tracking-tight">{{ transaction.book.title }}</td>
+                            <td class="px-10 py-6 font-medium opacity-80">{{ transaction.issue_date|date:"M d, Y" }}</td>
+                            <td class="px-10 py-6">
+                                {% if transaction.return_date %}
+                                    <span class="px-4 py-2 bg-[#146C2E]/10 text-[#146C2E] rounded-full text-xs font-bold uppercase tracking-widest">Returned</span>
+                                {% elif transaction.is_overdue %}
+                                    <span class="px-4 py-2 m3-error-container rounded-full text-xs font-bold uppercase tracking-widest">Overdue</span>
+                                {% else %}
+                                    <span class="px-4 py-2 m3-primary-container rounded-full text-xs font-bold uppercase tracking-widest text-[#001B3E]">Active</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-10 py-16 text-center font-medium text-xl opacity-70">
+                                No recent transactions found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('borrowingChart').getContext('2d');
+    let currentChart = null; 
+
+    // Global M3 Font Settings
+    Chart.defaults.font.family = "'Outfit', sans-serif";
+    Chart.defaults.color = '#1A1B20';
+
+    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const dataPoints = [12, 19, 15, 25, 22, 30, 28];
+
+    // Master Palette using your M3 Colors
+    const m3Palette = ['#415F91', '#22005D', '#001D35', '#BA1A1A', '#FFDAD6', '#C2E7FF', '#E9DDFF'];
+
+    function renderChart(type) {
+        if (currentChart) {
+            currentChart.destroy();
+        }
+
+        let dataset = {
+            label: 'Books Borrowed',
+            data: dataPoints,
+            borderWidth: 2,
+        };
+
+        let options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#22005D', 
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 14, weight: 'bold' },
+                    padding: 12,
+                    displayColors: false,
+                    cornerRadius: 12
+                }
+            },
+            scales: {} // Scales will be built dynamically below
+        };
+
+        // Determine if chart is Radial (Circular) or Linear (X/Y)
+        const isRadial = ['doughnut', 'pie', 'polarArea', 'radar'].includes(type);
+
+        if (!isRadial) {
+            // Linear Axis Setup (Line & Bar)
+            options.scales = {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(26, 27, 32, 0.05)', drawBorder: false },
+                    border: { display: false }
+                },
+                x: {
+                    grid: { display: false, drawBorder: false },
+                    border: { display: false }
+                }
+            };
+        } else if (type === 'radar') {
+            // Special Circular Axis for Radar
+            options.scales = {
+                r: {
+                    angleLines: { color: 'rgba(26, 27, 32, 0.1)' },
+                    grid: { color: 'rgba(26, 27, 32, 0.1)' },
+                    pointLabels: { font: { family: "'Outfit', sans-serif", weight: 'bold', size: 14 } },
+                    ticks: { display: false }
+                }
+            };
+        } else {
+            // Doughnut, Pie, PolarArea need axes completely hidden
+            options.scales = { x: { display: false }, y: { display: false } };
+        }
+
+        // Apply Specific Styles based on Chart Type
+        if (type === 'line') {
+            let gradient = ctx.createLinearGradient(0, 0, 0, 350);
+            gradient.addColorStop(0, 'rgba(65, 95, 145, 0.4)');
+            gradient.addColorStop(1, 'rgba(65, 95, 145, 0.0)');
+            
+            dataset.borderColor = '#415F91';
+            dataset.backgroundColor = gradient;
+            dataset.fill = true;
+            dataset.tension = 0.4; 
+            dataset.borderWidth = 4;
+            dataset.pointBackgroundColor = '#FFFFFF';
+            dataset.pointBorderColor = '#415F91';
+            dataset.pointBorderWidth = 3;
+            dataset.pointRadius = 6;
+            dataset.pointHoverRadius = 8;
+            
+        } else if (type === 'bar') {
+            dataset.backgroundColor = '#415F91';
+            dataset.borderColor = 'transparent';
+            dataset.borderRadius = 100; // Pill shaped bars
+            dataset.borderSkipped = false;
+            
+        } else if (type === 'radar') {
+            dataset.backgroundColor = 'rgba(65, 95, 145, 0.2)'; // Translucent fill
+            dataset.borderColor = '#415F91';
+            dataset.borderWidth = 3;
+            dataset.pointBackgroundColor = '#FFFFFF';
+            dataset.pointBorderColor = '#415F91';
+            dataset.pointBorderWidth = 3;
+            dataset.pointRadius = 5;
+
+        } else if (type === 'doughnut' || type === 'pie' || type === 'polarArea') {
+            dataset.backgroundColor = m3Palette;
+            dataset.borderColor = '#FFFFFF';
+            dataset.borderWidth = 2;
+            dataset.hoverOffset = 10;
+            
+            if (type === 'doughnut') {
+                options.cutout = '70%'; 
+            }
+        }
+
+        currentChart = new Chart(ctx, {
+            type: type,
+            data: { labels: labels, datasets: [dataset] },
+            options: options
+        });
+    }
+
+    document.getElementById('chartTypeSelector').addEventListener('change', function(e) {
+        renderChart(e.target.value);
+    });
+
+    // Start with Line Chart
+    renderChart('line');
+});
+</script>
+{% endblock content %}

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            color: #1A1B20; 
+            overflow-x: hidden;
+            background-color: #FDFBFF;
+        }
+
+        /* Android 17 Animated Mesh Background */
+        .android-17-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(214, 227, 255, 0.6), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(233, 221, 255, 0.6), transparent 50%);
+            animation: slowPan 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes slowPan {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(-2%, 2%); }
+        }
+
+        /* Solid Primary Button */
+        .m3-primary { background-color: #415F91; color: #FFFFFF; }
+        
+        /* Android 17 Translucent M3 Color Roles (Frosted Glass) */
+        .m3-primary-container { 
+            background-color: rgba(214, 227, 255, 0.45); 
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #001B3E; 
+        }
+        .m3-secondary-container { 
+            background-color: rgba(233, 221, 255, 0.45); 
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #22005D; 
+        }
+        .m3-tertiary-container { 
+            background-color: rgba(194, 231, 255, 0.45); 
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #001D35; 
+        }
+        .m3-error-container { 
+            background-color: rgba(255, 218, 214, 0.45); 
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #410002; 
+        }
+        .m3-surface-container { 
+            background-color: rgba(255, 255, 255, 0.5); 
+            backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+            color: #1A1B20; 
+        }
+
+        /* Advanced Emphasized Decelerate Curve */
+        .m3-interactive {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            position: relative;
+            overflow: hidden;
+        }
+        .m3-interactive:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08), inset 0 1px 2px rgba(255,255,255,0.9);
+        }
+        .m3-interactive:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .m3-entrance {
+            animation: m3-fade-up 0.8s cubic-bezier(0.05, 0.7, 0.1, 1.0) both;
+        }
+        @keyframes m3-fade-up {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative z-0">
+
+    <div class="android-17-bg"></div>
+
+    <nav class="max-w-7xl mx-auto w-full px-4 pt-6 mb-8 sticky top-0 z-50">
+        <div class="m3-surface-container rounded-[32px] px-6 py-4 flex flex-col md:flex-row md:items-center justify-between transition-all duration-300">
+            
+            <div class="flex justify-between items-center w-full md:w-auto">
+                <a href="{% url 'home' %}" class="flex items-center gap-2.5 text-2xl font-extrabold tracking-tight text-[#415F91] transition-transform duration-300 hover:-translate-y-1">
+                    <svg class="w-8 h-8 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                    </svg>
+                    LMS
+                </a>
+
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-white/40 text-[#415F91] transition-colors focus:outline-none m3-interactive">
+                    <svg id="menu-icon-open" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <svg id="menu-icon-close" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div id="mobile-menu" class="hidden md:flex flex-col md:flex-row md:items-center w-full md:w-auto mt-6 md:mt-0 gap-4 md:gap-6">
+                
+                <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+                    <a href="{% url 'book_list' %}" class="px-4 py-3 md:py-2 rounded-full font-semibold text-[#415F91] hover:bg-white/40 transition-colors text-center md:text-left">Catalog</a>
+                    {% if request.user.is_staff %}
+                    <a href="{% url 'analytics_dashboard' %}" class="px-4 py-3 md:py-2 rounded-full font-semibold text-[#415F91] hover:bg-white/40 transition-colors text-center md:text-left">Dashboard</a>
+                    <a href="/admin/" class="px-4 py-3 md:py-2 rounded-full font-semibold text-[#415F91] hover:bg-white/40 transition-colors text-center md:text-left">Admin</a>
+                    {% endif %}
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto pt-4 md:pt-0 border-t border-white/20 md:border-none">
+                    {% if request.user.is_authenticated %}
+                        <span class="text-sm font-medium mr-2 hidden lg:block text-[#1A1B20]">Hello, <span class="font-bold">{{ request.user.username }}</span></span>
+                        
+                        {% if request.user.is_member %}
+                            <a href="{% url 'profile' %}" class="m3-primary-container m3-interactive w-full md:w-auto text-center px-5 py-3 md:py-2.5 rounded-full text-sm font-bold">My Profile</a>
+                        {% endif %}
+                        
+                        <form method="POST" action="{% url 'logout' %}" class="inline w-full md:w-auto">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full md:w-auto text-center text-sm font-bold text-[#BA1A1A] hover:bg-[#FFDAD6]/50 px-4 py-3 md:py-2.5 rounded-full transition-colors">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="w-full md:w-auto text-center px-5 py-3 md:py-2.5 rounded-full font-bold text-[#415F91] hover:bg-white/40 transition-colors text-sm">Log In</a>
+                        <a href="{% url 'register' %}" class="m3-primary m3-interactive w-full md:w-auto text-center px-6 py-3 md:py-2.5 rounded-full text-sm font-bold">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+            
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2">
+        {% for message in messages %}
+            <div class="px-6 py-3.5 rounded-2xl text-sm font-medium shadow-lg backdrop-blur-md border border-white/20 transition-opacity duration-300
+                {% if message.tags == 'success' %} bg-[#146C2E]/80 text-white {% elif message.tags == 'error' %} bg-[#BA1A1A]/80 text-white {% else %} bg-[#313033]/80 text-[#F4EFF4] {% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="flex-1 px-4 pb-12 relative z-10">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const iconOpen = document.getElementById('menu-icon-open');
+            const iconClose = document.getElementById('menu-icon-close');
+
+            btn.addEventListener('click', function() {
+                // Toggle the expanding menu visibility
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('flex');
+                
+                // Swap the hamburger and X icons
+                iconOpen.classList.toggle('hidden');
+                iconClose.classList.toggle('hidden');
+            });
+        });
+    </script>
+
+</body>
+</html>

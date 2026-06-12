@@ -1,0 +1,51 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto pt-16 px-4 pb-24 relative z-0">
+
+    <div class="absolute -top-6 -left-8 w-32 h-32 m3-secondary-container rounded-full -z-10 m3-entrance" style="animation-delay: 0.1s;"></div>
+    <div class="absolute bottom-8 -right-8 w-28 h-28 m3-tertiary-container rounded-[32px] rotate-12 -z-10 m3-entrance" style="animation-delay: 0.2s;"></div>
+
+    <div class="m3-surface-container rounded-[48px] p-10 md:p-14 shadow-sm m3-entrance relative overflow-hidden" style="animation-delay: 0s;">
+
+        <div class="text-center mb-10">
+            <div class="w-24 h-24 rounded-[32px] m3-primary-container flex items-center justify-center mx-auto mb-8 text-4xl m3-interactive -rotate-3 hover:rotate-3 transition-transform">
+                👋
+            </div>
+            <h2 class="text-4xl font-extrabold text-[#1A1B20] tracking-tight mb-3">Welcome Back</h2>
+            <p class="text-lg font-medium text-[#1A1B20]/70">Sign in to access your library account.</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-6">
+                <label class="block text-[#1A1B20]/80 text-xs font-bold mb-3 pl-4 tracking-widest uppercase">Username</label>
+                <input type="text" name="username" required placeholder="Enter your username"
+                       class="w-full px-8 py-5 rounded-full text-lg font-medium text-[#1A1B20] bg-white focus:outline-none focus:ring-4 focus:ring-[#415F91]/20 transition-all border-none placeholder-[#1A1B20]/40 shadow-sm">
+            </div>
+
+            <div class="mb-10">
+                <label class="block text-[#1A1B20]/80 text-xs font-bold mb-3 pl-4 tracking-widest uppercase">Password</label>
+                <input type="password" name="password" required placeholder="Enter your password"
+                       class="w-full px-8 py-5 rounded-full text-lg font-medium text-[#1A1B20] bg-white focus:outline-none focus:ring-4 focus:ring-[#415F91]/20 transition-all border-none placeholder-[#1A1B20]/40 shadow-sm">
+            </div>
+
+            <button type="submit" class="m3-primary m3-interactive w-full font-bold py-5 rounded-full text-lg flex justify-center items-center gap-3">
+                Sign In
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </form>
+
+        <div class="mt-10 text-center pt-8 border-t border-[#1A1B20]/5">
+            <p class="text-[#1A1B20]/70 font-medium text-lg">
+                Don't have an account? 
+                <a href="{% url 'register' %}" class="text-[#415F91] font-extrabold hover:underline decoration-2 underline-offset-4 transition-all ml-1">
+                    Sign up
+                </a>
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}

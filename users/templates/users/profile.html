@@ -1,0 +1,103 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-10 pt-4">
+
+    <div class="m3-secondary-container rounded-[48px] p-10 md:p-14 m3-entrance flex flex-col md:flex-row justify-between items-center gap-8 shadow-sm" style="animation-delay: 0s;">
+        <div>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4 text-[#22005D] leading-tight">
+                Welcome back,<br>
+                {{ request.user.username }}
+            </h1>
+            <p class="font-medium text-lg text-[#22005D]/80">Library Card: <span class="font-bold text-[#22005D]">{{ request.user.library_card_number }}</span></p>
+        </div>
+
+        <div class="px-10 py-8 rounded-[32px] shadow-md border border-white/40 flex items-center gap-4 m3-interactive
+            {% if total_fines > 0 %} m3-error-container text-[#410002] {% else %} m3-tertiary-container text-[#001D35] {% endif %}">
+            <div class="text-right">
+                <p class="text-sm uppercase tracking-widest font-bold opacity-80 mb-1">Total Fines</p>
+                <p class="text-5xl font-extrabold tracking-tighter">₹{{ total_fines }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="m3-entrance" style="animation-delay: 0.1s;">
+        <h2 class="text-3xl font-extrabold mb-6 px-6 tracking-tight text-[#1A1B20]">Active Borrows</h2>
+        <div class="m3-surface-container rounded-[40px] overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left border-collapse">
+                    <thead class="bg-white/20 border-b border-white/40 backdrop-blur-sm">
+                        <tr>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70 text-[#1A1B20]">Book Title</th>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70 text-[#1A1B20]">Borrowed On</th>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70 text-[#1A1B20]">Due Date</th>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70 text-[#1A1B20]">Current Fine</th>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70 text-[#1A1B20] text-right">Receipt</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/20">
+                        {% for record in active_borrows %}
+                        <tr class="transition-colors hover:bg-white/40">
+                            <td class="px-10 py-6 font-bold text-xl tracking-tight text-[#1A1B20]">{{ record.book.title }}</td>
+                            <td class="px-10 py-6 font-medium opacity-80 text-[#1A1B20]">{{ record.issue_date|date:"M d, Y" }}</td>
+                            <td class="px-10 py-6 font-medium opacity-80 text-[#1A1B20]">{{ record.due_date|date:"M d, Y" }}</td>
+                            <td class="px-10 py-6 font-bold text-lg {% if record.fine_amount > 0 %}text-[#BA1A1A]{% else %}text-[#146C2E]{% endif %}">
+                                ₹{{ record.fine_amount }}
+                            </td>
+                            <td class="px-10 py-6 text-right">
+                                <a href="{% url 'generate_receipt' record.id %}" class="m3-primary m3-interactive px-6 py-3 rounded-full text-sm font-bold inline-block shadow-md border border-white/20">
+                                    Download
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-10 py-16 text-center font-medium text-xl opacity-70 text-[#1A1B20]">
+                                You currently have no borrowed books. Time to explore the catalog!
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="m3-entrance" style="animation-delay: 0.2s;">
+        <h2 class="text-3xl font-extrabold mb-6 px-6 tracking-tight text-[#1A1B20]">Your Waitlist</h2>
+        <div class="m3-surface-container rounded-[40px] overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left border-collapse">
+                    <thead class="bg-white/20 border-b border-white/40 backdrop-blur-sm">
+                        <tr>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70 text-[#1A1B20]">Book Title</th>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70 text-[#1A1B20]">Reserved On</th>
+                            <th class="px-10 py-6 text-sm uppercase tracking-widest font-bold opacity-70 text-[#1A1B20]">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/20">
+                        {% for reservation in active_reservations %}
+                        <tr class="transition-colors hover:bg-white/40">
+                            <td class="px-10 py-6 font-bold text-xl tracking-tight text-[#1A1B20]">{{ reservation.book.title }}</td>
+                            <td class="px-10 py-6 font-medium opacity-80 text-[#1A1B20]">{{ reservation.reservation_date|date:"M d, Y" }}</td>
+                            <td class="px-10 py-6">
+                                <span class="bg-white/40 backdrop-blur-md border border-white/50 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest inline-block text-[#1A1B20] shadow-sm">
+                                    Pending
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="px-10 py-16 text-center font-medium text-xl opacity-70 text-[#1A1B20]">
+                                You have no active reservations.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

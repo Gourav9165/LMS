@@ -1,0 +1,70 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<style>
+    /* Force Django's auto-generated form inputs into M3 Pill shapes */
+    .m3-form input {
+        width: 100%;
+        border-radius: 9999px; /* Perfect pill shape */
+        padding: 1.25rem 2rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1A1B20;
+        background-color: #FFFFFF;
+        border: none;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+    }
+    
+    .m3-form input:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(65, 95, 145, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+<div class="max-w-md mx-auto pt-10 px-4 pb-24 relative z-0">
+
+    <div class="absolute top-12 -right-12 w-36 h-36 m3-primary-container rounded-[40px] rotate-12 -z-10 m3-entrance" style="animation-delay: 0.1s;"></div>
+    <div class="absolute bottom-16 -left-10 w-28 h-28 m3-error-container rounded-full -z-10 m3-entrance" style="animation-delay: 0.2s;"></div>
+
+    <div class="m3-surface-container rounded-[48px] p-10 md:p-14 shadow-sm m3-entrance relative overflow-hidden" style="animation-delay: 0s;">
+
+        <div class="text-center mb-10">
+            <div class="w-24 h-24 rounded-[32px] m3-secondary-container flex items-center justify-center mx-auto mb-8 text-4xl m3-interactive rotate-3 hover:-rotate-3 transition-transform">
+                ✨
+            </div>
+            <h2 class="text-4xl font-extrabold text-[#1A1B20] tracking-tight mb-3">Create Account</h2>
+            <p class="text-lg font-medium text-[#1A1B20]/70">Join us to borrow and reserve books.</p>
+        </div>
+
+        <form method="POST" class="m3-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="mb-6">
+                    <label class="block text-[#1A1B20]/80 text-xs font-bold mb-3 pl-4 tracking-widest uppercase">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-[#BA1A1A] text-sm font-bold pl-4 mt-2">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="m3-primary m3-interactive w-full font-bold py-5 rounded-full text-lg flex justify-center items-center gap-3 mt-10">
+                Sign Up
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+            </button>
+        </form>
+
+        <div class="mt-10 text-center pt-8 border-t border-[#1A1B20]/5">
+            <p class="text-[#1A1B20]/70 font-medium text-lg">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="text-[#415F91] font-extrabold hover:underline decoration-2 underline-offset-4 transition-all ml-1">
+                    Log in
+                </a>
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}

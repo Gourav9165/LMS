@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body { font-family: Helvetica, sans-serif; color: #333; }
+        .header { text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 10px; margin-bottom: 30px; }
+        .title { font-size: 24px; font-weight: bold; color: #1e3a8a; margin: 0; }
+        .subtitle { font-size: 12px; color: #6b7280; }
+        .info-section { margin-bottom: 20px; }
+        .label { font-weight: bold; color: #4b5563; }
+        table { w-full; border-collapse: collapse; margin-top: 20px; width: 100%; }
+        th { background-color: #f3f4f6; text-align: left; padding: 10px; border: 1px solid #d1d5db; }
+        td { padding: 10px; border: 1px solid #d1d5db; }
+        .footer { text-align: center; margin-top: 50px; font-size: 10px; color: #9ca3af; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 class="title">Library Transaction Receipt</h1>
+        <p class="subtitle">Official Record of Borrowing</p>
+    </div>
+
+    <div class="info-section">
+        <p><span class="label">Member Name:</span> {{ record.user.username }}</p>
+        <p><span class="label">Library Card ID:</span> {{ record.user.library_card_number }}</p>
+        <p><span class="label">Transaction Date:</span> {{ record.issue_date }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Due Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ record.book.title }}</td>
+                <td>{{ record.book.author }}</td>
+                <td>{{ record.book.isbn }}</td>
+                <td>{{ record.due_date }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>Thank you for using our Library System. Please return books on time to avoid late fines.</p>
+        <p>Generated automatically on {% now "F j, Y" %}</p>
+    </div>
+
+</body>
+</html>
